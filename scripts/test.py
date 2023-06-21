@@ -1,4 +1,4 @@
-Example script used to run experiment three in a linux-based batch processing system:
+Example script used to run Experiment 3 from Escobedo (2013) from a linux-based batch processing system:
 
 #!/bin/bash
 #SBATCH -n 8
