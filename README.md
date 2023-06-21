@@ -85,4 +85,4 @@ Run executable CR_ROU described above multiple times by setting the respective f
 	-c  : with <1> (to certify that the algorithm outputs are correct) 
 
 *****************************************************************
-Note that the above flags provide more flexibility in how the algorithm can be tested than what is done in Escobedo (2023).
+Note that the above flags provide more versatility in how the algorithm can be tested than what is done in Escobedo (2023).
