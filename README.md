@@ -55,6 +55,7 @@ followed by the following options:
 *****************************************************************Replicating Experiment 1 of Escobedo (2023)*****************************************************************
 
 Run executable ROU described above multiple times by setting the respective flags as follows:
+
   	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
         -s  : with <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
 	-f  : with <exp_v1.out> (so that all runs are recorded in the same file)
@@ -65,6 +66,7 @@ Run executable ROU described above multiple times by setting the respective flag
 *****************************************************************Replicating Experiment 2 of Escobedo (2023)*****************************************************************
 
 Run executable ROU described above multiple times by setting the respective flags as follows:
+
   	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
         -s  : with <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
 	-i  : with <0 0>, separated by a space (this generates the update vector v to be based partially on a linear combination of some of the input matrix columns)
@@ -75,12 +77,12 @@ Run executable ROU described above multiple times by setting the respective flag
 *****************************************************************Replicating Experiment 3 of Escobedo (2023)*****************************************************************
 
 Run executable CR_ROU described above multiple times by setting the respective flags as follows:
+
   	-n  : <{100,200,300,400,500,600,700,800,900,1000}> specify each of these integers for 30 repetitions
         -s  : <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
 	-f  : with <exp_v3.out> (so that all runs are recorded in the same file)
 	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
 	-c  : with <1> (to certify that the algorithm outputs are correct) 
-	 
 
 *****************************************************************
 Note that the above flags provide more flexibility in how the algorithm can be tested than what is done in Escobedo (2023).
