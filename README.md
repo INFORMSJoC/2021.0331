@@ -40,6 +40,7 @@ followed by the following options:
 2) CR_ROU.exe
 usage: ./CR_ROU
 
+followed by the following options:
 
 	-h,--help
         -c,--check_sol  [1,0]           >default=0<  						(verify that the algorithm outputs are correct - requires additional computations)
