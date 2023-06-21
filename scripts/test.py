@@ -16,7 +16,7 @@ do
 	for ((i=1; i <= $It; i++))
 	do
 
-	./CR_ROU -n $n -s $S $T -r -100 100 -b 1 -c 1 -f exp3.out
+	./CR_ROU -n $n -s $S $T -r -100 100 -c 1 -f exp3.out
 
 	S=$[$S-$i*3]
 	T=$[$S+$i*5]
