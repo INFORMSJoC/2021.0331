@@ -1,106 +1,88 @@
-[![INFORMS Journal on Computing Logo](https://INFORMSJoC.github.io/logos/INFORMS_Journal_on_Computing_Header.jpg)](https://pubsonline.informs.org/journal/ijoc)
+This code is used to experiment with the REF LU Factorization's rank-one update algorithms introduced in Escobedo (2023); if using this software, please cite this code, whose separate DOI is to be provided in the published journal article. 
+In addition, the associated paper should be cited as:
 
-# CacheTest
+@article{escobedo2023exact,
+  title={Exact Matrix Factorization Updates for Nonlinear Programming},
+  author={Escobedo, Adolfo R},
+  journal={to appear in INFORMS Journal on Computing},
+  url={https://arxiv.org/abs/2202.00520},
+  year={2023}
+}
 
-This archive is distributed in association with the [INFORMS Journal on
-Computing](https://pubsonline.informs.org/journal/ijoc) under the [MIT License](LICENSE).
+*****************************************************************Typing <make> in this folder creates two executables*****************************************************************
 
-The software and data in this repository are a snapshot of the software and data
-that were used in the research reported on in the paper 
-[This is a Template](https://doi.org/10.1287/ijoc.2019.0000) by T. Ralphs. 
-The snapshot is based on 
-[this SHA](https://github.com/tkralphs/JoCTemplate/commit/f7f30c63adbcb0811e5a133e1def696b74f3ba15) 
-in the development repository. 
+1) ROU.exe: This executable is used to (a) build the REF LU factorization of a dense matrix A, (b) perform a rank-one update of REF-LU(A), and (3) build the REF LU factorization of the updated matrix, Ah, from scratch for comparison
 
-**Important: This code is being developed on an on-going basis at 
-https://github.com/tkralphs/JoCTemplate. Please go there if you would like to
-get a more recent version or would like support**
+2) CR_ROU.exe: This executable is used to (a) build the REF LU factorization of a dense matrix A, (b) perform a column replacement update of REF-LU(A) using the REF rank-one update algorithm, and (3) perform a column replacement update of REF-LU(A) using the push-and-swap approach of Escobedo and Moreno-Centeno (2017)
 
-## Cite
+A description of each executable is given below:
 
-To cite the contents of this repository, please cite both the paper and this repo, using their respective DOIs.
+1) ROU.exe:
+usage: ./ROU
 
-https://doi.org/10.1287/ijoc.2019.0000
+followed by the following options:
+    
+	-h,--help
+        -c,--check_sol  [1,0]           >default=0<  						(verify that the algorithm outputs are correct - requires additional computations)
+        -f,--file_out   [string]        >default_output.out<					(specify name of output file where the results of each run should be recorded - recommend >Runs_ROU.out<)
+        -i,--upd_idx    [int] [int]     >default=-1,-1< 					(specify indices used to generate v, when forcing part of it to be linearly dependent on the input matrix's columns)
+                        									(if upd_idx_1 =-1, the update vector v is not forced to be linearly dependent)
+                        									(if upd_idx_1 = 0, v is forced to be linearly dependent using random indices)
+                        									(if upd_idx_1 > 0, v is forced to be linearly dependent using first up_idx1 columns and first up_idx_2 rows of original matrix)
 
-https://doi.org/10.1287/ijoc.2019.0000.cd
+        -n,--num_vars   [int]           >default=5<						(Dimension of the square input matrix)
+        -p,--print      [1,0]           >default=0<						(Prints to screen the working matrix after each iteration; for best results, use only with n <= 10)
+        -r,--range      [int] [int]     >default=-9,9<						(The lower and upper bound for each generated matrix entry)
+        -s,--seeds      [int] [int]     >default=11,1400<					(1st seed for nonzero-entries placement, second for entry values)
 
-Below is the BibTex for citing this snapshot of the respoitory.
 
-```
-@article{CacheTest,
-  author =        {T. Ralphs},
-  publisher =     {INFORMS Journal on Computing},
-  title =         {{CacheTest}},
-  year =          {2020},
-  doi =           {10.1287/ijoc.2019.0000.cd},
-  url =           {https://github.com/INFORMSJoC/2019.0000},
-}  
-```
 
-## Description
+2) CR_ROU.exe
+usage: ./CR_ROU
 
-The goal of this software is to demonstrate the effect of cache optimization.
+followed by the following options:
 
-## Building
+	-h,--help
+        -c,--check_sol  [1,0]           >default=0<  						(verify that the algorithm outputs are correct - requires additional computations)
+        -f,--file_out   [string]        >default_output.out<					(specify name of output file where the results of each run should be recorded - recommend >Runs_CR_ROU.out<)
+        -n,--num_vars   [int]           >default=5<						(Dimension of the square input matrix)
+        -p,--print      [1,0]           >default=0<						(Prints to screen the working matrix after each iteration; for best results, use only with n <= 10)
+        -r,--range      [int] [int]     >default=-9,9<						(The lower and upper bound for each generated matrix entry)
+        -s,--seeds      [int] [int]     >default=11,1400<					(1st seed for nonzero-entries placement, second for entry values)
 
-In Linux, to build the version that multiplies all elements of a vector by a
-constant (used to obtain the results in [Figure 1](results/mult-test.png) in the
-paper), stepping K elements at a time, execute the following commands.
 
-```
-make mult
-```
 
-Alternatively, to build the version that sums the elements of a vector (used
-to obtain the results [Figure 2](results/sum-test.png) in the paper), stepping K
-elements at a time, do the following.
+*****************************************************************Replicating Experiment 1 of Escobedo (2023)*****************************************************************
 
-```
-make clean
-make sum
-```
+Run executable ROU described above multiple times by setting the respective flags as follows:
 
-Be sure to make clean before building a different version of the code.
+  	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
+        -s  : with <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
+	-f  : with <exp_v1.out> (so that all runs are recorded in the same file)
+	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
+	-c  : with <1> (to certify that the algorithm outputs are correct) 
+	 
 
-## Results
+*****************************************************************Replicating Experiment 2 of Escobedo (2023)*****************************************************************
 
-Figure 1 in the paper shows the results of the multiplication test with different
-values of K using `gcc` 7.5 on an Ubuntu Linux box.
+Run executable ROU described above multiple times by setting the respective flags as follows:
 
-![Figure 1](results/mult-test.png)
+  	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
+        -s  : with <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
+	-i  : with <0 0>, separated by a space (this generates the update vector v to be based partially on a linear combination of some of the input matrix columns)
+	-f  : with <exp_v2.out> (so that all runs are recorded in the same file)
+	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
+	-c  : with <1> (to certify that the algorithm outputs are correct) 
 
-Figure 2 in the paper shows the results of the sum test with different
-values of K using `gcc` 7.5 on an Ubuntu Linux box.
+*****************************************************************Replicating Experiment 3 of Escobedo (2023)*****************************************************************
 
-![Figure 1](results/sum-test.png)
+Run executable CR_ROU described above multiple times by setting the respective flags as follows:
 
-## Replicating
+  	-n  : <{100,200,300,400,500,600,700,800,900,1000}> specify each of these integers for 30 repetitions
+        -s  : <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
+	-f  : with <exp_v3.out> (so that all runs are recorded in the same file)
+	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
+	-c  : with <1> (to certify that the algorithm outputs are correct) 
 
-To replicate the results in [Figure 1](results/mult-test), do either
-
-```
-make mult-test
-```
-or
-```
-python test.py mult
-```
-To replicate the results in [Figure 2](results/sum-test), do either
-
-```
-make sum-test
-```
-or
-```
-python test.py sum
-```
-
-## Ongoing Development
-
-This code is being developed on an on-going basis at the author's
-[Github site](https://github.com/tkralphs/JoCTemplate).
-
-## Support
-
-For support in using this software, submit an
-[issue](https://github.com/tkralphs/JoCTemplate/issues/new).
+*****************************************************************
+Note that the above flags provide more versatility in how the algorithm can be tested than what is done in Escobedo (2023).
