@@ -12,8 +12,7 @@ The snapshot is based on
 
 
 **Important: This code is being periodically updated to add more features at 
-https://github.com/adolfoescobedo/##. Please go there if you would like to
-get a more recent version or would like support**
+https://github.com/adolfoescobedo/##. Please go there to check if there is a more recent version**
 
 ## Cite
 
