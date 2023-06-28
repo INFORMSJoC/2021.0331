@@ -1,24 +1,103 @@
-This code is used to experiment with the REF LU Factorization's rank-one update algorithms introduced in Escobedo (2023); if using this software, please cite this code, whose separate DOI is to be provided in the published journal article. 
-In addition, the associated paper should be cited as:
+[![INFORMS Journal on Computing Logo](https://INFORMSJoC.github.io/logos/INFORMS_Journal_on_Computing_Header.jpg)](https://pubsonline.informs.org/journal/ijoc)
 
+# Exact Matrix Factorization Updates for Nonlinear Programming
+
+This archive is distributed in association with the [INFORMS Journal on
+Computing](https://pubsonline.informs.org/journal/ijoc) under the [MIT License](LICENSE).
+
+The software and data in this repository are a snapshot of the software and data associated with the paper (##) by Adolfo R. Escobedo.
+
+The snapshot is based on 
+[this SHA](https://github.com/adolfoescobedo/2021.0331) in the development repository.  
+
+
+**Important: This code is being periodically updated to add more features at 
+https://github.com/adolfoescobedo/##. Please go there if you would like to
+get a more recent version or would like support**
+
+## Cite
+
+To cite the contents of this repository, please cite both the paper and this repo, using their respective DOIs.
+
+https://doi.org/10.1287/###
+
+https://doi.org/10.1287/###
+
+Below is the BibTex for citing this snapshot of the repository.
+
+```
 @article{escobedo2023exact,
-  title={Exact Matrix Factorization Updates for Nonlinear Programming},
-  author={Escobedo, Adolfo R},
-  journal={to appear in INFORMS Journal on Computing},
-  url={https://arxiv.org/abs/2202.00520},
-  year={2023}
+  author=	{Escobedo, Adolfo R},
+  publisher=	{INFORMS Journal on Computing},
+  title=	{Exact Matrix Factorization Updates for Nonlinear Programming},
+  year=		{2023},  
+  doi=		{https://doi.org/10.1287/###},
+  url=		{https://github.com/adolfoescobedo/2021.0331},
 }
+```
 
-*****************************************************************Typing <make> in this folder creates two executables*****************************************************************
+# ROU: Roundoff-error-free Rank-One Update
+# CR_ROU: Column Replacement via the Roundoff-error-free Rank-One Update
+ 
+ROU and CR_ROU are integer-preserving algorithms for efficiently updating a roundoff-error-free LU or Cholesky factorization.  This repository contains two executables (ROU and CR_ROU) for replicating three experiments in the paper and instructions for additional computational testing.
 
-1) ROU.exe: This executable is used to (a) build the REF LU factorization of a dense matrix A, (b) perform a rank-one update of REF-LU(A), and (3) build the REF LU factorization of the updated matrix, Ah, from scratch for comparison
+## Dependencies
 
-2) CR_ROU.exe: This executable is used to (a) build the REF LU factorization of a dense matrix A, (b) perform a column replacement update of REF-LU(A) using the REF rank-one update algorithm, and (3) perform a column replacement update of REF-LU(A) using the push-and-swap approach of Escobedo and Moreno-Centeno (2017)
+- gcc-g++ (11.0.0 or compatible version)
+- make
+- gmp (required for working in arbitrary precision arithmetic)
 
-A description of each executable is given below:
 
-1) ROU.exe:
-usage: ./ROU
+# Installation
+
+Before installing the REF ROU algorithms, make sure to have the following dependencies installed:
+
+1. gcc-g++:
+   - Install compatible version of gcc-g++ compiler.
+
+2. make:
+   - Install make using your package manager or from the official website: https://www.gnu.org/software/make/#download
+
+3. gmp:
+   - The REF ROU algorithms depend on the gnu gmp library for working in arbitrary precision arithmetic
+   - Install gmp by following the instructions provided in the GNU Multiple Precision Arithmetic Library documentation: [gmp download and installation](https://gmplib.org/#DOWNLOAD)
+
+
+## Getting Started
+
+The following instructions will help set up the REF ROU algorithms on your system.
+
+
+### Installation
+
+1. Clone the repository 
+```
+git clone https://github.com/adolfoescobedo/2021.0331.git
+
+Install dependencies, as needed
+
+```
+
+2. Configure and build the project:
+
+```
+make 
+
+```
+
+
+## Usage
+
+There are two executables associated with this installation:
+
+ROU.exe: This executable is used to (a) build the REF LU factorization of a dense matrix A, (b) perform a rank-one update of REF-LU(A), and (3) build the REF LU factorization of the updated matrix, Ah, from scratch (for comparison)
+
+CR_ROU.exe: This executable is used to (a) build the REF LU factorization of a dense matrix A, (b) perform a column replacement update of REF-LU(A) using the REF rank-one update algorithm, and (3) perform a column replacement update of REF-LU(A) using the alternative push-and-swap approach of Escobedo and Moreno-Centeno (2017) (https://doi.org/10.1137/16M1089630)
+
+
+3a. Executing the ROU executable, with the relevant command line arguments:
+
+Type ./src/ROU
 
 followed by the following options:
     
@@ -37,8 +116,32 @@ followed by the following options:
 
 
 
-2) CR_ROU.exe
-usage: ./CR_ROU
+3b. Replicating experiment 1 in the paper:
+
+Run executable ROU as described above multiple times by setting the respective flags as follows:
+
+  	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
+        -s  : with <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
+	-f  : with <exp_v1.out> (so that all runs are recorded in the same file)
+	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
+	-c  : with <1> (to certify that the algorithm outputs are correct) 
+	 
+
+3c. Replicating experiment 2 in the paper:
+
+Run executable ROU as described above multiple times by setting the respective flags as follows:
+
+  	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
+        -s  : with <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
+	-i  : with <0 0>, separated by a space (this generates the update vector v to be based partially on a linear combination of some of the input matrix columns)
+	-f  : with <exp_v2.out> (so that all runs are recorded in the same file)
+	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
+	-c  : with <1> (to certify that the algorithm outputs are correct) 
+
+
+4a. Executing the CR_ROU executable, with the relevant command line arguments:
+
+Type ./src/CR_ROU
 
 followed by the following options:
 
@@ -51,30 +154,7 @@ followed by the following options:
         -s,--seeds      [int] [int]     >default=11,1400<					(1st seed for nonzero-entries placement, second for entry values)
 
 
-
-*****************************************************************Replicating Experiment 1 of Escobedo (2023)*****************************************************************
-
-Run executable ROU described above multiple times by setting the respective flags as follows:
-
-  	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
-        -s  : with <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
-	-f  : with <exp_v1.out> (so that all runs are recorded in the same file)
-	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
-	-c  : with <1> (to certify that the algorithm outputs are correct) 
-	 
-
-*****************************************************************Replicating Experiment 2 of Escobedo (2023)*****************************************************************
-
-Run executable ROU described above multiple times by setting the respective flags as follows:
-
-  	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
-        -s  : with <int int> (specify two different integer random seeds for each repetitions; this can be done with a script.
-	-i  : with <0 0>, separated by a space (this generates the update vector v to be based partially on a linear combination of some of the input matrix columns)
-	-f  : with <exp_v2.out> (so that all runs are recorded in the same file)
-	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
-	-c  : with <1> (to certify that the algorithm outputs are correct) 
-
-*****************************************************************Replicating Experiment 3 of Escobedo (2023)*****************************************************************
+4b. Replicating experiment 3 in the paper:
 
 Run executable CR_ROU described above multiple times by setting the respective flags as follows:
 
@@ -84,5 +164,8 @@ Run executable CR_ROU described above multiple times by setting the respective f
 	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
 	-c  : with <1> (to certify that the algorithm outputs are correct) 
 
-*****************************************************************
-Note that the above flags provide more versatility in how the algorithm can be tested than what is done in Escobedo (2023).
+
+## Ongoing Development
+
+This code is being periodically updated to add more features at the author's  
+[Github site](https://github.com/adolfoescobedo/). Please email the author if you have related questions**
