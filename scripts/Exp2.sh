@@ -11,12 +11,14 @@ n=16
 S=-14503
 T=-14413
 
+cd ../src/
+
 for ((k=1; k <= 6; k++))
 do	
 	for ((i=1; i <= $It; i++))
 	do
 
-	./ROU -n $n -s $S $T -r -100 100 -c 1 -i 0 0 -f exp2.out
+	./ROU -a 0 -n $n -s $S $T -r -100 100 -c 1 -i 0 0 -f ../results/exp2.out
 
 	S=$[$S-$i*3]
 	T=$[$S+$i*3]
