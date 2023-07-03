@@ -5,9 +5,7 @@
 #include <cmath>
 using namespace std;
 
-
-
-//Print 1D ptr array based in the default order 
+// Print 1D ptr array based in the default order 
 template <typename TypeA>
 void GF_rawPrint(TypeA *ptr1D, int size)
 {
@@ -16,7 +14,7 @@ void GF_rawPrint(TypeA *ptr1D, int size)
 	cout << endl << endl;	
 }
 
-//Print 2D ptr array based on the default row/column order 
+// Print 2D ptr array based on the default row/column order 
 template <typename TypeA>
 void GF_rawPrint(TypeA **ptr2D, int rows, int cols)
 {
@@ -29,7 +27,7 @@ void GF_rawPrint(TypeA **ptr2D, int rows, int cols)
 	cout << endl;
 }
 
-//Print 1D ptr array based in the specified order 
+// Print 1D ptr array based in the specified order 
 template <typename TypeA>
 void GF_idx_rawPrint(TypeA *ptr1D, vector<int> &idx)
 {
@@ -38,7 +36,7 @@ void GF_idx_rawPrint(TypeA *ptr1D, vector<int> &idx)
 	cout << endl << endl;	
 }
 
-//Print 2D ptr array based on a specific row/column order 
+// Print 2D ptr array based on a specific row/column order 
 template <typename TypeA>
 void GF_idx_rawPrint(TypeA **ptr2D, vector<int> &row_idx, vector<int> &col_idx)
 {
@@ -51,7 +49,7 @@ void GF_idx_rawPrint(TypeA **ptr2D, vector<int> &row_idx, vector<int> &col_idx)
 	cout << endl;
 }
 
-//Print 2D mpz_t ptr array based on a specific row/column order 
+// Print 2D mpz_t ptr array based on a specific row/column order 
 void GFz_idx_formPrint(mpz_t **ptr2D, vector<int> &row_idx, vector<int> &col_idx, int pSpace, int col_adj)
 {
 	double temp;
@@ -91,7 +89,7 @@ void GFz_idx_formPrint(mpz_t **ptr2D, vector<int> &row_idx, vector<int> &col_idx
 	cout << endl;
 }
 
-//Print 2D mpz_t ptr array based on a specific row/column order 
+// Print 2D mpz_t ptr array based on a specific row/column order 
 void GFz_idx_framePrint(mpz_t **ptr2D, vector<int> &row_idx, vector<int> &col_idx, vector<int> &frame_sgn, int pSpace, int col_adj)
 {
 	mpz_t posEntry;
@@ -211,7 +209,7 @@ void GFz_idx_framePrint(mpz_t **ptr2D, vector<int> &row_idx, vector<int> &col_id
 	cout << endl;
 }
 
-//Print 2D mpq_t ptr array based on a specific row/column order 
+// Print 2D mpq_t ptr array based on a specific row/column order 
 void GFq_idx_formPrint(mpq_t **ptr2D, vector<int> &row_idx, vector<int> &col_idx, int pSpace, int col_adj)
 {
 	double temp;
@@ -251,7 +249,7 @@ void GFq_idx_formPrint(mpq_t **ptr2D, vector<int> &row_idx, vector<int> &col_idx
 	cout << endl;
 }
 
-
+// Initalize an mpz matrix of the specified dimensions to 0
 mpz_t** GFz_mat_init_zeros(int rows, int cols)
 {
 	mpz_t ** mpz_mat;
@@ -267,6 +265,7 @@ mpz_t** GFz_mat_init_zeros(int rows, int cols)
 	return mpz_mat;
 }
 
+// Initalize an mpq matrix of the specified dimensions to 0
 mpq_t** GFq_mat_init_zeros(int rows, int cols)
 {
 	mpq_t ** mpq_mat;
@@ -282,7 +281,8 @@ mpq_t** GFq_mat_init_zeros(int rows, int cols)
 	return mpq_mat;
 }
 
-mpz_t* GFz_vec_init_zeros(int rows) //(int rows, int lb, int ub, int seed, double density)
+// Initalize an mpz vector of the specified dimension to 0
+mpz_t* GFz_vec_init_zeros(int rows)
 {
 	mpz_t * mpz_vec;
 	mpz_vec = new mpz_t[rows];
@@ -291,7 +291,8 @@ mpz_t* GFz_vec_init_zeros(int rows) //(int rows, int lb, int ub, int seed, doubl
 	return mpz_vec;
 }
 
-mpq_t* GFq_vec_init_zeros(int rows) //(int rows, int lb, int ub, int seed, double density)
+// Initalize an mpq vector of the specified dimension to 0
+mpq_t* GFq_vec_init_zeros(int rows)
 {
 	mpq_t * mpq_vec;
 	mpq_vec = new mpq_t[rows];
@@ -300,6 +301,7 @@ mpq_t* GFq_vec_init_zeros(int rows) //(int rows, int lb, int ub, int seed, doubl
 	return mpq_vec;
 }
 
+// Initalize a randomized mpz matrix according to the specified arguments
 mpz_t** GFz_mat_init_density(int rows, int cols, int lb, int ub, int seed1, int seed2, double density, bool diag)
 {	
 	mpz_t ** mpz_mat = GFz_mat_init_zeros(rows, cols);
@@ -397,6 +399,7 @@ mpz_t** GFz_mat_init_density(int rows, int cols, int lb, int ub, int seed1, int 
 	return mpz_mat;
 }
 
+// Initalize a randomized mpq matrix according to the specified arguments
 mpq_t** GFq_mat_init_density(int rows, int cols, int lb, int ub, int seed1, int seed2, double density, bool diag)
 {	
 	mpq_t ** mpq_mat = GFq_mat_init_zeros(rows, cols);
@@ -494,6 +497,7 @@ mpq_t** GFq_mat_init_density(int rows, int cols, int lb, int ub, int seed1, int 
 	return mpq_mat;
 }
 
+// Initalize a randomized mpz vector according to the specified arguments
 mpz_t* GFz_vec_init_rand(int rows, int lb, int ub, int seed)
 {
 	mpz_t * mpz_vec = GFz_vec_init_zeros(rows);
@@ -507,8 +511,7 @@ mpz_t* GFz_vec_init_rand(int rows, int lb, int ub, int seed)
 	return mpz_vec;
 }
 
-
-//For copying mpz matrices or mpq matrices and obtaining an mpq matrix from an mpz matrix
+// For copying mpq matrices
 void GFq_mat_copy(mpq_t **mat_orig, mpq_t **mat_copy, int rows, int cols)
 {
 	for (int i=0; i < rows; i++)
@@ -521,6 +524,7 @@ void GFq_mat_copy(mpq_t **mat_orig, mpq_t **mat_copy, int rows, int cols)
 	}
 }
 
+// For copying mpz matrices
 void GFz_mat_copy(mpz_t **mat_orig, mpz_t **mat_copy, int rows, int cols)
 {
 	for (int i=0; i < rows; i++)
@@ -533,7 +537,7 @@ void GFz_mat_copy(mpz_t **mat_orig, mpz_t **mat_copy, int rows, int cols)
 	}
 }
 
-//For copying mpz vectors 
+// For copying mpz vectors 
 void GFz_vec_copy(mpz_t *vec_orig, mpz_t *vec_copy, int rows)
 {
 	for (int i=0; i < rows; i++)
@@ -543,6 +547,7 @@ void GFz_vec_copy(mpz_t *vec_orig, mpz_t *vec_copy, int rows)
 	}
 }
 
+// For copying mpz matrices into mpz matrices
 void GFzToq_mat_copy(mpz_t **mpz_mat, mpq_t **mpq_mat, int rows, int cols)
 {
 	for (int i=0; i < rows; i++)
@@ -555,8 +560,7 @@ void GFzToq_mat_copy(mpz_t **mpz_mat, mpq_t **mpq_mat, int rows, int cols)
 	}
 }
 
-
-//Replace a set of consecutive columns in an existing matrix with an input block of columns
+// Replace a set of consecutive columns in an existing matrix with an input block of columns
 void GFz_mat_insert_cols(int idx_ins, mpz_t **mpz_mat, mpz_t **mpz_col_block, vector<int> &col_idx, int rows, int cols_ins)
 {
 	for (int i = 0; i < rows; i++)
@@ -566,8 +570,7 @@ void GFz_mat_insert_cols(int idx_ins, mpz_t **mpz_mat, mpz_t **mpz_col_block, ve
 	}
 }
 
-
-//Replace a set of consecutive columns in an existing matrix with an input block of columns
+// Replace a set of consecutive columns in an existing matrix with an input block of columns
 void GFq_mat_insert_cols(int idx_ins, mpq_t **mpq_mat, mpq_t **mpq_col_block, vector<int> &col_idx, int rows, int cols_ins)
 {
 	for (int i = 0; i < rows; i++)
@@ -577,7 +580,7 @@ void GFq_mat_insert_cols(int idx_ins, mpq_t **mpq_mat, mpq_t **mpq_col_block, ve
 	}
 }
 
-
+// For printing vectors of different types
 template <typename TypeA>
 void GF_vecPrint(vector<TypeA> &vec)
 {
@@ -586,6 +589,7 @@ void GF_vecPrint(vector<TypeA> &vec)
 	cout << endl;	
 }
 
+// For setting vectors of different types to 0
 template <typename TypeA>
 void GF_setVecToZero(vector<TypeA> &vec, int size)
 {
@@ -594,8 +598,7 @@ void GF_setVecToZero(vector<TypeA> &vec, int size)
 		vec.push_back(0);
 }
 
-//Math Functions
-
+//Math Functions (self-explanatory based on the name)
 template <typename TypeA>
 TypeA GF_vecSum(vector<TypeA> &vec)
 {
@@ -627,9 +630,6 @@ void GFq_matmatMul(mpq_t **mat_prod, mpq_t **matL, mpq_t **matR, int rows_L, int
 			}
 	    }      
 	}
-
-
-
 }
 
 void GFq_idx_matmatMul(mpq_t **mat_prod, mpq_t **matL, mpq_t **matR,  vector<int> &row_idx_L, vector<int> &col_idx_L, int cols_R)
@@ -685,7 +685,7 @@ bool GFz_vecComp(mpz_t *vec1, mpz_t *vec2, int rows)
 	return vecs_equal;
 }
 
-//Change the sign of a vector's elements starting with index k
+// Change the sign of a vector's elements starting with index k
 void GF_vec_consencutive_sgn_flip(vector<int> &vec, int size, int k)
 {
 	for (int i = k; i < size; i++)
