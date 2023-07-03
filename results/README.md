@@ -4,7 +4,7 @@
 
 The files included in this subdirectory are the computer outputs associated with the three experiments performed in the paper. 
 
-exp1.out corresponds to Experiment 1. The experiment can be replicated by running scripts/Exp1.sh in a Linux-based batch processing system; alternatively, go to the "src" directory and execute ROU.exe multiple times, setting the respective flags as follows:
+exp1.out corresponds to Experiment 1. The experiment can be replicated by running scripts/Exp1.sh in a Linux-based batch processing system; alternatively, go to the "src" directory and execute ROU multiple times, setting the respective flags as follows:
 
   	-a  : with <0>
 	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
@@ -13,7 +13,7 @@ exp1.out corresponds to Experiment 1. The experiment can be replicated by runnin
 	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
 	-c  : with <1> (to certify that the algorithm outputs are correct) 
 
-exp2.out corresponds to Experiment 2. The experiment can be replicated by running scripts/Exp2.sh in a Linux-based batch processing system; alternatively, go to the "src" directory and execute ROU.exe multiple times, setting the respective flags as follows:
+exp2.out corresponds to Experiment 2. The experiment can be replicated by running scripts/Exp2.sh in a Linux-based batch processing system; alternatively, go to the "src" directory and execute ROU multiple times, setting the respective flags as follows:
 
 	-a  : with <0>  	
 	-n  : with <{16,32,64,128,256,512,1024}> specify each of these integers for 30 repetitions
@@ -23,7 +23,7 @@ exp2.out corresponds to Experiment 2. The experiment can be replicated by runnin
 	-r  : with <-100 100> (provides the range for each randomly generated integer matrix entry)
 	-c  : with <1> (to certify that the algorithm outputs are correct) 
 
-exp3.out corresponds to Experiment 3. The experiment can be replicated by running scripts/Exp3.sh in a Linux-based batch processing system; alternatively, go to the "src" directory and execute ROU.exe multiple times, setting the respective flags as follows:
+exp3.out corresponds to Experiment 3. The experiment can be replicated by running scripts/Exp3.sh in a Linux-based batch processing system; alternatively, go to the "src" directory and execute ROU multiple times, setting the respective flags as follows:
 
   	-a  : with <1>
 	-n  : <{100,200,300,400,500,600,700,800,900,1000}> specify each of these integers for 30 repetitions
