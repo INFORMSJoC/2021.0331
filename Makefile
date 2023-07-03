@@ -11,18 +11,14 @@ CCCFLAGS = -std=c++11
 CCLNFLAGS = -lgmp
 CCCLNFLAGS = -lgmpxx
 
-
 #--------------------------------------------------------------------
 # Applications
 #---------------------------------------------------------------------
-APPS = ROU CR_ROU
+APPS = ROU
 all: $(APPS)
 
 ROU: src/ROU.cpp 
 	$(CCC) -o ./src/ROU src/ROU.cpp $(CCLNFLAGS) $(CCCLNFLAGS) $(CCCFLAGS) 
-
-CR_ROU: src/CR_ROU.cpp 
-	$(CCC) -o ./src/CR_ROU src/CR_ROU.cpp $(CCLNFLAGS) $(CCCLNFLAGS) $(CCCFLAGS) 
 
 #--------------------------------------------------------------------
 # Additional commands
