@@ -3,148 +3,184 @@ class IPGE : public Exact_LU_Alg
 {
 	public:
 
+		// To keep track of sign changes in the matrix frames
 		vector<int> frame_sgn;
 
-		//Default Constructorf
+		// Default Constructor
 		IPGE ();
 
-		//User-specified command options
+		// Constructor from user-specified command options
 		IPGE (cmdOpt &);
 
-		//Matrix file constructor
+		// Matrix file constructor
 		IPGE (string);
 
-		//REF LU algorithm with no permutations (i.e., does not account for possibility of ZERO-valued pivots)
+		/*-----------------------------------------------------------------------------------------
+		                        FUNCTIONS
+		-----------------------------------------------------------------------------------------*/
+		
+		
+		// REF LU algorithm with no permutations (i.e., does not account for possibility of ZERO-valued pivots)
 		void REF_LU_noPivoting(bool);
 		
 		//Reduced matrix IPGE pivot (i.e., does not affect previous pivot rows/cols)
 		void piv_red();
 		
+		// This function sets a set of righthand side vectors using random values, according to the specified density of non-zeros
 		void set_RHS(double);
 
-		//REF forward substitution, as described in Escobedo and Moreno-Centeno (2015)
+		/* 	
+			REF forward substitution, as described in Escobedo and Moreno-Centeno (2015)
+			The algorithm solves the triangular system (L^{-1})y=b in integer-preserving arithmetic onto the existing right-hand side columns
+		*/
 		void FSub();
 
-		//Same as above but the matrix to be forwarded is provided as an argument
+		// Similar as the above function, but the matrix to be forwarded is provided as an argument
 		void FSub(mpz_t **, int);
 
-		//Same as above but the matrix to be forwarded is provided as an argument as well as an index within that matrix (i.e., the substitution is performed only on this column) 
+		// Similar as the above function, but the matrix to be forwarded is provided as an argument as well as an index within that matrix (i.e., the substitution is performed only on this column) 
 		void FSub(mpz_t **, int, int);
 		
-		//Forward substitution that takes REF-LU matrix, a single vector, and number of rows as arguments; also has option for transpose forward substitution
-		//Returns forward substituted vector
+		// Similar as the above function, but the function takes REF-LU matrix, a single vector, and number of rows as arguments; also has option for transpose forward substitution; returns forward-substituted vector
 		mpz_t *  FSub(mpz_t **, mpz_t *, int, bool);
 		
 		
-		//Single FSub step expanding from the 3-argument F-Sub function defined above
-		//Performs REF Forward Substitution Stepwise Recusion defined in Escobedo (2023) (with the difference that column step_idx of L and previous pivot are not passed as arguments (they are accessed directly)
-		//Last argument is used to denote whether the FSub is being performed in the transpose sense (i.e., with U^T rather than with L)
+		/*
+			Single FSub step expanding from the 3-argument F-Sub function defined above
+			Performs REF Forward Substitution Stepwise Recusion defined in Escobedo (2023) (with the difference that column step_idx of L and previous pivot are not passed as arguments (they are accessed directly)
+			The last argument is used to denote whether the FSub is being performed in the transpose sense (i.e., with U^T rather than with L)
+		*/
 		void FSub_Step(mpz_t **, int, int, int, bool);
 		
-		//Single FSub step expanding from the 3-argument F-Sub function defined above
-		//Performs REF Forward Substitution Stepwise Recusion defined in Escobedo (2023) (with the difference that column step_idx of L and previous pivot are not passed as arguments (they are accessed directly)
-		//Last argument is used to denote whether the FSub is being performed in the transpose sense (i.e., with U^T rather than with L)
+		/*	
+			Single FSub step expanding from the 3-argument F-Sub function defined above
+			Performs REF Forward Substitution Stepwise Recusion defined in Escobedo (2023) (with the difference that column step_idx of L and previous pivot are not passed as arguments (they are accessed directly)
+			Last argument is used to denote whether the FSub is being performed in the transpose sense (i.e., with U^T rather than with L)
+		*/
 		mpz_t * FSub_Step_slim(mpz_t *, int, bool);
 		
-		//REF backward substitution
+		/*
+			REF backward substitution, as described in Escobedo and Moreno-Centeno (2015)
+			The algorithm solves the scaled triangular system Udet(A)x=det(A)y in exact rational arithmetic 
+		*/
 		void BSub();
 
+		// Initializes the right-hand side vectors and solution vectors
 		void set_IPGE_Bq_Xq();
 
-		//Resets all values of the binary frame_sgn array to 1 
+
+
+		/*-----------------------------------------------------------------------------------------
+		    FUNCTIONS associated with the push-and-swap REF column replacement update
+		-----------------------------------------------------------------------------------------*/
+
+		// Resets all values of the binary frame_sgn array to 1 
 		void reset_frameSigns();
 		
-		//REF operation for rewinding all entries within a particular frame (and possibly shifting left)
+		// REF operation for rewinding all entries within a particular frame (and possibly shifting left)
 		void backtrack(int, bool, bool);
 
-		//REF operation for performing a change of pivot operation on a particular frame
+		// REF operation for performing a change of pivot operation on a particular frame
 		void RwSOP(int, int);
 		
-		//Sets v vector used in ROU; if given FALSE, v is generated randomly
-		//If given TRUE, v is generated as a linear combination of columns of A (using either random or user-provided indices)
-		mpz_t* ROU_set_update_vec_v(int,int, bool);
-		
-		//Sets w vector used in ROU; all entries are generate randomly
-		mpz_t* ROU_set_update_vec_w();
-		
-		//Backtrack subroutine specific to column-push operation
+		// Backtrack subroutine specific to column-push operation
 		void CPush_backtrack(int);
-		
-		//Backtrack subroutine specific to rank-one update
-		void ROU_backtrack(int);
 
-		//Backtrack subroutine specific to column-push operation
+		// Backtrack subroutine specific to column-push operation
 		void CPush_backtrack_slim(int);
 
-		//RwSOP subroutine specific to column-push operation
+		// RwSOP subroutine specific to column-push operation
 		void CPush_RwSOP(int, int);
 
-		//RwSOP subroutine specific to column-push operation
+		// Reduced RwSOP subroutine specific to column-push operation
 		void CPush_RwSOP_slim(int, int);
 
-		//RwSOP subroutine specific to rank-one update
-		void ROU_RwSOP(int);
-
-		//Column permutation subroutine specific to column-push operation
+		// Column permutation subroutine specific to column-push operation
 		void CPush_CPerm(int);
 
-		//Column permutation subroutine specific to column-push operation
+		// Reduced column permutation subroutine specific to column-push operation
 		void CPush_CPerm_slim(int);
 		
-		//Changes signs of ALL entries in frames k,...,n (includes extension to entering column)
+		// Changes signs of ALL entries in frames k,...,n (includes extension to entering column)
 		void CPush_flipSigns(int, int);
 		
-		//Changes signs of ALL entries in frames k,...,n (includes extension to entering column)
+		// Reduced function for changing signs of ALL entries in frames k,...,n (includes extension to entering column)
 		void CPush_flipSigns_slim(int);
 		
-		//Changes signs of ALL entries in frames k,...,n 
-		void ROU_flipSigns(int);
-		
-		//Changes signs of rank-one update vector starting at the specified index
-		void ROU_flipSigns_vec(mpz_t *, int);
-		
-		//Checks that the next divisor needed to obtain entries of the updated REF-LU factorization is nonzero
-		bool ROU_checkNextDivisorGood(mpz_t **, mpz_t*, int, bool);
-		
-		//Recalculates an entry from REF-LU(Ah0) up to the specified iteration k
-		void ROU_recomputeAhDiagEntry(mpz_t **, int, int, int);
-		
-		//Handles the case when the divisor needed to obtain entries of L is zero; it is a subroutine called, as needed, within the ROU algorithm
-		void ROU_Special_Case(int, bool);
-
-		//Column-push algorithm 
+		// Column-push algorithm 
 		void CPush(int);
 
-		//Column-push algorithm 
+		// Reduced column-push algorithm 
 		void CPush_slim(int);
 
-		//Column-push algorithm 
+		// Reduced column-push algorithm 
 		void CPush_slim(int, bool);
 
-		//REF Column Update
+		// Push-and-swap REF column replacement update
 		void Update();
 
-		void Update_slim();
+		// Reduced Push-and-swap REF column replacement update
+		void Update_slim();		
+		
+		
+		/*-----------------------------------------------------------------------------------------
+		    FUNCTIONS Associated with the REF rank-one update 
+		-----------------------------------------------------------------------------------------*/	
+		
+		// Changes signs of ALL entries in frames k,...,n, for rank-one update
+		void ROU_flipSigns(int);
+		
+		// Changes signs of rank-one update vector starting at the specified index
+		void ROU_flipSigns_vec(mpz_t *, int);
+		
+		// RwSOP subroutine specific to rank-one update
+		void ROU_RwSOP(int);
+		
+		// Backtrack subroutine specific to rank-one update
+		void ROU_backtrack(int);
+		
+		// Sets v vector used in ROU; if given FALSE, v is generated randomly
+		// If given TRUE, v is generated as a linear combination of columns of A (using either random or user-provided indices)
+		mpz_t* ROU_set_update_vec_v(int,int, bool);
+		
+		// Sets w vector used in ROU; all entries are generate randomly
+		mpz_t* ROU_set_update_vec_w();
+				
+		// Checks that the next divisor needed to obtain entries of the updated REF-LU factorization is nonzero
+		bool ROU_checkNextDivisorGood(mpz_t **, mpz_t*, int, bool);
+		
+		// Recalculates an entry from REF-LU(Ah0) up to the specified iteration k
+		void ROU_recomputeAhDiagEntry(mpz_t **, int, int, int);
+		
+		// Handles the case when the divisor needed to obtain entries of L is zero; it is a subroutine called, as needed, within the ROU algorithm
+		void ROU_Special_Case(int, bool);
 
-		//This is the main algorithm discussed in Escobedo (2023), with adjustments for special case 2 (SC2) included
-		//This function returns an int array consisting of (1) the column index used for generating v, (2) the row index used for generating v, and (3) the number of SC2 calls required
+		/*
+			This is the main algorithm discussed in the paper, with adjustments for special case 2 (SC2) included
+			This function returns an int array consisting of (1) the column index used for generating v, (2) the row index used for generating v, and (3) the number of SC2 calls required
+		*/
 		int* Rank_One_Update(bool, int, int);
 		
-		//This is the special variant of the ROU algorithm for performing a column replacement update discussed in Escobedo (2023), with adjustments for special case 2 (SC2) included 
-		//The number of SC2 calls required by the algorithm is returned by this function
-		int Rank_One_Update_CR(bool, int);
+		/*
+			This is the special variant of the ROU algorithm for performing a column replacement update discussed in Escobedo (2023), with adjustments for special case 2 (SC2) included 
+			The number of SC2 calls required by the algorithm is returned by this function
+		*/
+		int* Rank_One_Update_CR(bool, int);
 };
 
+// Default Constructor
 IPGE::IPGE () {
 	Exact_LU_Alg();
 }
 
+// Constructor from user-specified command options
 IPGE::IPGE (cmdOpt &run) 
 {
 	load_from_cmdOpt(run);
 	A = GFz_mat_init_density(rows, cols, get_lb(), get_ub(), get_seed1(), get_seed2(), get_density(), true);
 }
 
+// Matrix file constructor
 IPGE::IPGE (string f_name)
 {
 	string line;
@@ -194,6 +230,7 @@ IPGE::IPGE (string f_name)
 	}
 }
 
+// REF LU algorithm with no permutations (i.e., does not account for possibility of ZERO-valued pivots)
 void IPGE::REF_LU_noPivoting(bool printIt)
 {
 	if(printIt)
@@ -207,6 +244,7 @@ void IPGE::REF_LU_noPivoting(bool printIt)
 	}
 }
 
+//Reduced matrix IPGE pivot (i.e., does not affect previous pivot rows/cols)
 void IPGE::piv_red()
 {
 	mpz_t prod1, prod2;
@@ -232,11 +270,17 @@ void IPGE::piv_red()
 	stepNum++;
 }
 
+// This function sets a set of righthand side vectors using random values, according to the specified density of non-zeros
 void IPGE::set_RHS(double density_)
 {
 	//Initialize elements in B to 0
 	B = GFz_mat_init_density(rows, cols_B, get_lb(), get_ub(), get_seed1()*3, get_seed2()*2, density_, false);	
 }
+
+/* 	
+	REF forward substitution, as described in Escobedo and Moreno-Centeno (2015)
+	The algorithm solves the triangular system (L^{-1})y=b in integer-preserving arithmetic onto the existing right-hand side columns
+*/
 
 void IPGE::FSub()
 {
@@ -267,6 +311,7 @@ void IPGE::FSub()
 	}
 }
 
+// Similar as the above function, but the matrix to be forwarded is provided as an argument 
 void IPGE::FSub(mpz_t **mpz_mat, int mat_cols)
 {
 	mpz_t prod1, prod2;
@@ -289,6 +334,7 @@ void IPGE::FSub(mpz_t **mpz_mat, int mat_cols)
 	}
 }
 
+// Similar as the above function, but the matrix to be forwarded is provided as an argument as well as an index within that matrix (i.e., the substitution is performed only on this column) 
 void IPGE::FSub(mpz_t **mpz_mat, int mat_cols, int idx_RHS_col)
 {
 	mpz_t prod1, prod2;
@@ -307,6 +353,7 @@ void IPGE::FSub(mpz_t **mpz_mat, int mat_cols, int idx_RHS_col)
 	}
 }
 
+// Similar as the above function, but the function takes REF-LU matrix, a single vector, and number of rows as arguments; also has option for transpose forward substitution; returns forward-substituted vector
 mpz_t* IPGE::FSub(mpz_t **mat, mpz_t *vec, int n, bool transp)
 {
 	mpz_t* y_temp;
@@ -343,6 +390,11 @@ mpz_t* IPGE::FSub(mpz_t **mat, mpz_t *vec, int n, bool transp)
 	return y_temp;
 }
 
+/*
+	Single FSub step expanding from the 3-argument F-Sub function defined above
+	Performs REF Forward Substitution Stepwise Recusion defined in Escobedo (2023) (with the difference that column step_idx of L and previous pivot are not passed as arguments (they are accessed directly)
+	The last argument is used to denote whether the FSub is being performed in the transpose sense (i.e., with U^T rather than with L)
+*/
 void IPGE::FSub_Step(mpz_t **mpz_mat, int mat_cols, int idx_RHS_col, int step_idx, bool transp)
 {
 	mpz_t prod1, prod2;
@@ -371,6 +423,11 @@ void IPGE::FSub_Step(mpz_t **mpz_mat, int mat_cols, int idx_RHS_col, int step_id
 	}
 }
 
+/*	
+	Single FSub step expanding from the 3-argument F-Sub function defined above
+	Performs REF Forward Substitution Stepwise Recusion defined in Escobedo (2023) (with the difference that column step_idx of L and previous pivot are not passed as arguments (they are accessed directly)
+	Last argument is used to denote whether the FSub is being performed in the transpose sense (i.e., with U^T rather than with L)
+*/
 mpz_t* IPGE::FSub_Step_slim(mpz_t *mpz_vec, int step_idx, bool transp)
 {
 	mpz_t* y_temp;
@@ -416,6 +473,10 @@ mpz_t* IPGE::FSub_Step_slim(mpz_t *mpz_vec, int step_idx, bool transp)
 	return y_temp;
 }
 
+/*
+	REF backward substitution, as described in Escobedo and Moreno-Centeno (2015)
+	The algorithm solves the scaled triangular system Udet(A)x=det(A)y in exact rational arithmetic 
+*/
 void IPGE::BSub()
 {
 	mpz_t prod, det;
@@ -444,6 +505,7 @@ void IPGE::BSub()
 	}
 }
 
+// Initializes the right-hand side vectors and solution vectors
 void IPGE::set_IPGE_Bq_Xq()
 {
 	//Common denominator to all entries in Xq
@@ -470,6 +532,7 @@ void IPGE::set_IPGE_Bq_Xq()
 	}
 }
 
+// Resets all values of the binary frame_sgn array to 1 
 void IPGE::reset_frameSigns()
 {
 	frame_sgn.clear();
@@ -477,6 +540,7 @@ void IPGE::reset_frameSigns()
 		frame_sgn.push_back(1);
 }
 
+// REF operation for rewinding all entries within a particular frame (and possibly shifting left)
 void IPGE::backtrack(int fr_idx, bool hPart, bool fr_shift)
 {
 	mpz_t prod1, prod2;
@@ -525,6 +589,7 @@ void IPGE::backtrack(int fr_idx, bool hPart, bool fr_shift)
 	}
 }
 
+// REF operation for performing a change of pivot operation on a particular frame
 void IPGE::RwSOP(int fr_idx, int pivPrime_idx)
 {
 	mpz_t prod1, prod2;
@@ -543,6 +608,7 @@ void IPGE::RwSOP(int fr_idx, int pivPrime_idx)
 	}
 }
 
+// Backtrack subroutine specific to column-push operation
 void IPGE::CPush_backtrack(int fr_idx)
 {
 	mpz_t prod1, prod2;
@@ -565,6 +631,7 @@ void IPGE::CPush_backtrack(int fr_idx)
 	}
 }
 
+// Backtrack subroutine specific to column-push operation
 void IPGE::CPush_backtrack_slim(int fr_idx)
 {
 	mpz_t prod1, prod2;
@@ -591,7 +658,7 @@ void IPGE::CPush_backtrack_slim(int fr_idx)
 	}
 }
 
-
+// RwSOP subroutine specific to column-push operation
 void IPGE::CPush_RwSOP(int fr_idx, int c_plus_idx)
 {
 	mpz_t prod1, prod2;
@@ -612,6 +679,7 @@ void IPGE::CPush_RwSOP(int fr_idx, int c_plus_idx)
 	mpz_divexact(A_plus[row_idx[fr_idx]][c_plus_idx], prod1, A[row_idx[fr_idx - 1]][col_idx[fr_idx - 1]]);
 }
 
+// Reduced RwSOP subroutine specific to column-push operation
 void IPGE::CPush_RwSOP_slim(int fr_idx, int c_plus_idx)
 {
 	mpz_t prod1, prod2;
@@ -640,41 +708,25 @@ void IPGE::CPush_RwSOP_slim(int fr_idx, int c_plus_idx)
 		mpz_neg(A_plus[row_idx[fr_idx]][c_plus_idx], A_plus[row_idx[fr_idx]][c_plus_idx]);
 }
 
-
-void IPGE::ROU_backtrack(int fr_idx)
+// Column permutation subroutine specific to column-push operation
+void IPGE::CPush_CPerm(int fr_idx)
 {
-	mpz_t prod1, prod2;
-	mpz_inits(prod1, prod2, NULL);
+	mpz_t temp;
+	mpz_init(temp);
 
-	//Backtrack all entries along the vertical part of the frame and shift to the adjacent frame to the left
-	for (int i = fr_idx; i < row_idx.size(); i++)
+	//For frames 1,...,fr_idx-1, perform a normal permutation of columns fr_idx and fr_idx-1
+	std::swap(col_idx[fr_idx], col_idx[fr_idx-1]);
+
+	//For the remaining frames, change sign of entries along frame fr_idx-1 (fr_idx before abvoe column permuation) and then re-permute the entries along columns fr_idx and fr_idx-1
+	for (int i = fr_idx; i < rows; i++)
 	{
-		if (fr_idx > 1)
-			mpz_mul(prod1, A[row_idx[fr_idx - 2]][col_idx[fr_idx - 2]], A[row_idx[i]][col_idx[fr_idx]]);
-		else
-			mpz_set(prod1, A[row_idx[i]][col_idx[fr_idx]]);
-
-
-		mpz_mul(prod2, A[row_idx[fr_idx - 1]][col_idx[fr_idx]], A[row_idx[i]][col_idx[fr_idx - 1]]);
-		mpz_add(prod1, prod1, prod2);
-		mpz_divexact(A[row_idx[i]][col_idx[fr_idx - 1]], prod1, A[row_idx[fr_idx - 1]][col_idx[fr_idx - 1]]);
+		mpz_neg(temp, A[row_idx[i]][col_idx[fr_idx - 1]]);
+		mpz_set(A[row_idx[i]][col_idx[fr_idx - 1]], A[row_idx[i]][col_idx[fr_idx]]);
+		mpz_set(A[row_idx[i]][col_idx[fr_idx]], temp);
 	}
 }
 
-void IPGE::ROU_RwSOP(int fr_idx)
-{
-	mpz_t prod1, prod2;
-	mpz_inits(prod1, prod2, NULL);
-
-	for (int j = fr_idx + 1; j < col_idx.size(); j++)
-	{
-		mpz_mul(prod1, A[row_idx[fr_idx - 1]][col_idx[fr_idx]], A[row_idx[fr_idx]][col_idx[j]]);
-		mpz_mul(prod2, A[row_idx[fr_idx]][col_idx[fr_idx]], A[row_idx[fr_idx - 1]][col_idx[j]]);
-		mpz_sub(prod1, prod1, prod2);
-		mpz_divexact(A[row_idx[fr_idx]][col_idx[j]], prod1, A[row_idx[fr_idx - 1]][col_idx[fr_idx - 1]]);
-	}
-}
-
+// Reduced column permutation subroutine specific to column-push operation
 void IPGE::CPush_CPerm_slim(int fr_idx)
 {
 	mpz_t temp;
@@ -699,23 +751,7 @@ void IPGE::CPush_CPerm_slim(int fr_idx)
 	}
 }
 
-void IPGE::CPush_CPerm(int fr_idx)
-{
-	mpz_t temp;
-	mpz_init(temp);
-
-	//For frames 1,...,fr_idx-1, perform a normal permutation of columns fr_idx and fr_idx-1
-	std::swap(col_idx[fr_idx], col_idx[fr_idx-1]);
-
-	//For the remaining frames, change sign of entries along frame fr_idx-1 (fr_idx before abvoe column permuation) and then re-permute the entries along columns fr_idx and fr_idx-1
-	for (int i = fr_idx; i < rows; i++)
-	{
-		mpz_neg(temp, A[row_idx[i]][col_idx[fr_idx - 1]]);
-		mpz_set(A[row_idx[i]][col_idx[fr_idx - 1]], A[row_idx[i]][col_idx[fr_idx]]);
-		mpz_set(A[row_idx[i]][col_idx[fr_idx]], temp);
-	}
-}
-
+// Changes signs of ALL entries in frames k,...,n (includes extension to entering column)
 void IPGE::CPush_flipSigns(int fr_idx, int c_plus_idx)
 {
 	for (int i = fr_idx; i < rows; i++)
@@ -728,7 +764,169 @@ void IPGE::CPush_flipSigns(int fr_idx, int c_plus_idx)
 	}	
 }
 
-//Sets the update vector v either to either have all entries randomly generated (Experiment 1 in Escobedo (2023)) or as partially as a linear combination of sub-columns of A0[i][j] (Experiment 2 in Escobedo (2023))
+// Reduced function for changing signs of ALL entries in frames k,...,n (includes extension to entering column)
+void IPGE::CPush_flipSigns_slim(int fr_idx)
+{
+	GF_vec_consencutive_sgn_flip(frame_sgn, rows, fr_idx);
+}
+
+// Column-push algorithm 
+void IPGE::CPush(int col_idx_right)
+{
+	int c_plus_idx = ex_idx - col_idx_right + num_ent;
+
+	for (int i = col_idx_right; i < rows; i++)
+	{
+		CPush_backtrack(i);
+		CPush_RwSOP(i, c_plus_idx);
+		CPush_CPerm(i);
+		if (i+1 < rows)
+			CPush_flipSigns(i+1, c_plus_idx);
+	}
+
+	//Swap exiting column with entering column
+	for (int i = 0; i < rows; i++)
+		mpz_set(A[row_idx[i]][col_idx[rows-1]], A_plus[row_idx[i]][c_plus_idx]);
+}
+
+// Reduced column-push algorithm 
+void IPGE::CPush_slim(int col_idx_right)
+{
+	reset_frameSigns();
+	
+	int c_plus_idx = ex_idx - col_idx_right + num_ent;
+
+	//cout << "c_plus_idx:" << c_plus_idx + 1 << endl;
+
+	for (int i = col_idx_right; i < rows; i++)
+	{
+		CPush_backtrack_slim(i);
+		CPush_RwSOP_slim(i, c_plus_idx);
+		CPush_CPerm_slim(i);
+		CPush_flipSigns_slim(i + 1);
+	}
+
+	//Swap exiting column with entering column
+	for (int i = 0; i < rows; i++)
+		mpz_set(A[row_idx[i]][col_idx[rows - 1]], A_plus[row_idx[i]][c_plus_idx]);
+}
+
+// Reduced column-push algorithm 
+void IPGE::CPush_slim(int col_idx_right, bool printIt)
+{
+	reset_frameSigns();
+	
+	int c_plus_idx = ex_idx - col_idx_right + num_ent;
+
+	for (int i = col_idx_right; i < rows; i++)
+	{
+		CPush_backtrack_slim(i);
+		CPush_RwSOP_slim(i, c_plus_idx);
+		CPush_CPerm_slim(i);
+		CPush_flipSigns_slim(i + 1);
+		
+		if(printIt)
+			GFz_idx_formPrint(A, row_idx, col_idx, pSpace + 3, 0);
+	}
+
+	//Swap exiting column with entering column
+	for (int i = 0; i < rows; i++)
+		mpz_set(A[row_idx[i]][col_idx[rows - 1]], A_plus[row_idx[i]][c_plus_idx]);
+}
+
+// Push-and-swap REF column replacement update
+void IPGE::Update()
+{
+	A_plus = GFz_mat_init_density(rows, num_ent, get_lb(), get_ub(), get_seed1() - get_seed2() * 5, 4 * get_seed1() + get_seed2(), get_density(), false);
+
+	vector<int> temp;
+	for (int i = 0; i < num_ent; i++)
+		temp.push_back(i);
+
+	for (int i = ex_idx + num_ent; i >= ex_idx + 1; i--)
+	{
+		FSub(A_plus, num_ent, num_ent - (i - ex_idx));
+		CPush(i);		
+	}
+}
+
+// Reduced push-and-swap REF column replacement update
+void IPGE::Update_slim()
+{
+	num_ent = 1;
+
+	A_plus = GFz_mat_init_density(rows, num_ent, get_lb(), get_ub(), get_seed1() - get_seed2() * 5, 4 * get_seed1() + get_seed2(), get_density(), false);
+	A_plus0 = GFz_mat_init_density(rows, num_ent, get_lb(), get_ub(), get_seed1() - get_seed2() * 5, 4 * get_seed1() + get_seed2(), get_density(), false);
+
+
+	vector<int> temp;
+	for (int i = 0; i < num_ent; i++)
+		temp.push_back(i);
+
+	for (int i = ex_idx + num_ent; i >= ex_idx + 1; i--)
+	{
+		reset_frameSigns();
+		FSub(A_plus, num_ent, num_ent - (i - ex_idx));
+		CPush_slim(i);
+	}
+}
+
+
+
+// Changes signs of ALL entries in frames k,...,n, for rank-one update
+void IPGE::ROU_flipSigns(int fr_idx)
+{
+	for (int i = fr_idx; i < rows; i++)
+	{
+		for (int j = fr_idx; j < cols; j++)
+			mpz_neg(A[row_idx[i]][col_idx[j]], A[row_idx[i]][col_idx[j]]);
+	}	
+}
+
+// Changes signs of rank-one update vector starting at the specified index
+void IPGE::ROU_flipSigns_vec(mpz_t * mpz_vec, int beg_idx)
+{
+	for (int i = beg_idx; i < rows; i++)
+		mpz_neg(mpz_vec[row_idx[i]], mpz_vec[row_idx[i]]);
+}
+
+// RwSOP subroutine specific to rank-one update
+void IPGE::ROU_RwSOP(int fr_idx)
+{
+	mpz_t prod1, prod2;
+	mpz_inits(prod1, prod2, NULL);
+
+	for (int j = fr_idx + 1; j < col_idx.size(); j++)
+	{
+		mpz_mul(prod1, A[row_idx[fr_idx - 1]][col_idx[fr_idx]], A[row_idx[fr_idx]][col_idx[j]]);
+		mpz_mul(prod2, A[row_idx[fr_idx]][col_idx[fr_idx]], A[row_idx[fr_idx - 1]][col_idx[j]]);
+		mpz_sub(prod1, prod1, prod2);
+		mpz_divexact(A[row_idx[fr_idx]][col_idx[j]], prod1, A[row_idx[fr_idx - 1]][col_idx[fr_idx - 1]]);
+	}
+}
+
+// Backtrack subroutine specific to rank-one update
+void IPGE::ROU_backtrack(int fr_idx)
+{
+	mpz_t prod1, prod2;
+	mpz_inits(prod1, prod2, NULL);
+
+	//Backtrack all entries along the vertical part of the frame and shift to the adjacent frame to the left
+	for (int i = fr_idx; i < row_idx.size(); i++)
+	{
+		if (fr_idx > 1)
+			mpz_mul(prod1, A[row_idx[fr_idx - 2]][col_idx[fr_idx - 2]], A[row_idx[i]][col_idx[fr_idx]]);
+		else
+			mpz_set(prod1, A[row_idx[i]][col_idx[fr_idx]]);
+
+
+		mpz_mul(prod2, A[row_idx[fr_idx - 1]][col_idx[fr_idx]], A[row_idx[i]][col_idx[fr_idx - 1]]);
+		mpz_add(prod1, prod1, prod2);
+		mpz_divexact(A[row_idx[i]][col_idx[fr_idx - 1]], prod1, A[row_idx[fr_idx - 1]][col_idx[fr_idx - 1]]);
+	}
+}
+
+//Sets the update vector v either to either have all entries randomly generated (Experiment 1 in the paper) or as partially as a linear combination of sub-columns of A0[i][j] (Experiment 2 in the paper)
 mpz_t* IPGE::ROU_set_update_vec_v(int dep_col_idx, int dep_row_idx_end, bool isLinearCombination)
 {
 	mpz_t temp, ZERO;
@@ -769,7 +967,7 @@ mpz_t* IPGE::ROU_set_update_vec_v(int dep_col_idx, int dep_row_idx_end, bool isL
 	return v_temp_permuted;
 }
 
-//Sets the update vector w either to have all entries randomly generated (Experiments 1 and 2 in Escobedo (2023)) 
+//Sets the update vector w to have all entries randomly generated (for Experiments 1 and 2 in the paper) 
 mpz_t* IPGE::ROU_set_update_vec_w()
 {
 	mpz_t *w_temp, *w_temp_permuted;
@@ -785,27 +983,7 @@ mpz_t* IPGE::ROU_set_update_vec_w()
 	return w_temp_permuted;
 }
 
-void IPGE::ROU_flipSigns_vec(mpz_t * mpz_vec, int beg_idx)
-{
-	for (int i = beg_idx; i < rows; i++)
-		mpz_neg(mpz_vec[row_idx[i]], mpz_vec[row_idx[i]]);
-}
-
-void IPGE::CPush_flipSigns_slim(int fr_idx)
-{
-	GF_vec_consencutive_sgn_flip(frame_sgn, rows, fr_idx);
-}
-
-
-void IPGE::ROU_flipSigns(int fr_idx)
-{
-	for (int i = fr_idx; i < rows; i++)
-	{
-		for (int j = fr_idx; j < cols; j++)
-			mpz_neg(A[row_idx[i]][col_idx[j]], A[row_idx[i]][col_idx[j]]);
-	}	
-}
-
+// Checks that the next divisor needed to obtain entries of the updated REF-LU factorization is nonzero
 bool IPGE::ROU_checkNextDivisorGood(mpz_t **mat, mpz_t* mpz_vec, int k, bool transp)
 {
 	mpz_t prod1, prod2, temp;
@@ -832,6 +1010,7 @@ bool IPGE::ROU_checkNextDivisorGood(mpz_t **mat, mpz_t* mpz_vec, int k, bool tra
 	return good_divisor;
 }
 
+// Recalculates an entry from REF-LU(Ah0) up to the specified iteration k
 void IPGE::ROU_recomputeAhDiagEntry(mpz_t **mpz_mat, int i, int j, int k)
 {
 	mpz_t prod1, prod2;
@@ -852,105 +1031,7 @@ void IPGE::ROU_recomputeAhDiagEntry(mpz_t **mpz_mat, int i, int j, int k)
 	}	
 }
 
-
-void IPGE::CPush(int col_idx_right)
-{
-	int c_plus_idx = ex_idx - col_idx_right + num_ent;
-
-	for (int i = col_idx_right; i < rows; i++)
-	{
-		CPush_backtrack(i);
-		CPush_RwSOP(i, c_plus_idx);
-		CPush_CPerm(i);
-		if (i+1 < rows)
-			CPush_flipSigns(i+1, c_plus_idx);
-	}
-
-	//Swap exiting column with entering column
-	for (int i = 0; i < rows; i++)
-		mpz_set(A[row_idx[i]][col_idx[rows-1]], A_plus[row_idx[i]][c_plus_idx]);
-}
-
-
-void IPGE::CPush_slim(int col_idx_right)
-{
-	reset_frameSigns();
-	
-	int c_plus_idx = ex_idx - col_idx_right + num_ent;
-
-	//cout << "c_plus_idx:" << c_plus_idx + 1 << endl;
-
-	for (int i = col_idx_right; i < rows; i++)
-	{
-		CPush_backtrack_slim(i);
-		CPush_RwSOP_slim(i, c_plus_idx);
-		CPush_CPerm_slim(i);
-		CPush_flipSigns_slim(i + 1);
-	}
-
-	//Swap exiting column with entering column
-	for (int i = 0; i < rows; i++)
-		mpz_set(A[row_idx[i]][col_idx[rows - 1]], A_plus[row_idx[i]][c_plus_idx]);
-}
-
-void IPGE::CPush_slim(int col_idx_right, bool printIt)
-{
-	reset_frameSigns();
-	
-	int c_plus_idx = ex_idx - col_idx_right + num_ent;
-
-	for (int i = col_idx_right; i < rows; i++)
-	{
-		CPush_backtrack_slim(i);
-		CPush_RwSOP_slim(i, c_plus_idx);
-		CPush_CPerm_slim(i);
-		CPush_flipSigns_slim(i + 1);
-		
-		if(printIt)
-			GFz_idx_formPrint(A, row_idx, col_idx, pSpace + 3, 0);
-	}
-
-	//Swap exiting column with entering column
-	for (int i = 0; i < rows; i++)
-		mpz_set(A[row_idx[i]][col_idx[rows - 1]], A_plus[row_idx[i]][c_plus_idx]);
-}
-
-void IPGE::Update()
-{
-	A_plus = GFz_mat_init_density(rows, num_ent, get_lb(), get_ub(), get_seed1() - get_seed2() * 5, 4 * get_seed1() + get_seed2(), get_density(), false);
-
-	vector<int> temp;
-	for (int i = 0; i < num_ent; i++)
-		temp.push_back(i);
-
-	for (int i = ex_idx + num_ent; i >= ex_idx + 1; i--)
-	{
-		FSub(A_plus, num_ent, num_ent - (i - ex_idx));
-		CPush(i);		
-	}
-}
-
-// For simplex column-replacement update
-void IPGE::Update_slim()
-{
-	num_ent = 1;
-
-	A_plus = GFz_mat_init_density(rows, num_ent, get_lb(), get_ub(), get_seed1() - get_seed2() * 5, 4 * get_seed1() + get_seed2(), get_density(), false);
-	A_plus0 = GFz_mat_init_density(rows, num_ent, get_lb(), get_ub(), get_seed1() - get_seed2() * 5, 4 * get_seed1() + get_seed2(), get_density(), false);
-
-
-	vector<int> temp;
-	for (int i = 0; i < num_ent; i++)
-		temp.push_back(i);
-
-	for (int i = ex_idx + num_ent; i >= ex_idx + 1; i--)
-	{
-		reset_frameSigns();
-		FSub(A_plus, num_ent, num_ent - (i - ex_idx));
-		CPush_slim(i);
-	}
-}
-
+// Handles the case when the divisor needed to obtain entries of L is zero; it is a subroutine called, as needed, within the ROU algorithm
 void IPGE::ROU_Special_Case(int k, bool printIt)
 {
 	//Performs REF adjacent column permutation on REF-LU(A)
@@ -1035,8 +1116,10 @@ void IPGE::ROU_Special_Case(int k, bool printIt)
 	}
 }
 
-//This is the main algorithm discussed in Escobedo (2023), with adjustments for special case 2 (SC2) included
-//This function returns an int array consisting of (1) the column index used for generating v, (2) the row index used for generating v, and (3) the number of SC2 calls required
+/*
+	This is the main algorithm discussed in the paper, with adjustments for special case 2 (SC2) included
+	This function returns an int array consisting of (1) the column index used for generating v, (2) the row index used for generating v, and (3) the number of SC2 calls required
+*/
 int* IPGE::Rank_One_Update(bool printIt, int up_idx_1, int up_idx_2)
 {
 	//Needed for calculations
@@ -1219,9 +1302,11 @@ int* IPGE::Rank_One_Update(bool printIt, int up_idx_1, int up_idx_2)
 	return rou_outputs;
 }
 
-//This is the special variant of the ROU algorithm for performing a column replacement update discussed in Escobedo (2023), with adjustments for special case 2 (SC2) included 
-//The number of SC2 calls required by the algorithm is returned by this function
-int IPGE::Rank_One_Update_CR(bool printIt, int ex_idx)
+/*
+	This is the special variant of the ROU algorithm for performing a column replacement update discussed in the paper, with adjustments for special case 2 (SC2) included 
+	The number of SC2 calls required by the algorithm is returned by this function
+*/
+int* IPGE::Rank_One_Update_CR(bool printIt, int ex_idx)
 {
 	//Needed for calculations
 	mpz_t temp, ZERO, prod1,prod2;
@@ -1229,8 +1314,17 @@ int IPGE::Rank_One_Update_CR(bool printIt, int ex_idx)
 	mpz_inits(temp,ZERO, NULL);
 	mpz_inits(prod1,prod2,NULL);
 	
-	//Keep track of times columns are permuted to avoid dividing by zero
-	num_perms = 0;
+	
+	//Values to be returned by this function; for this special use of the ROU algorithm, the first 
+	static int rou_outputs [3];
+	
+	//The first two elements are set to -2 since special initialization of v is not relevant
+	rou_outputs[0] = -2;
+	rou_outputs[1] = -2;
+	
+	
+	// Third element keeps track of times columns are permuted to avoid dividing by zero (i.e., SC2 calls)
+	rou_outputs[2] = 0;
 			
 	//Initialize rank-one update vectors	
 	
@@ -1268,7 +1362,7 @@ int IPGE::Rank_One_Update_CR(bool printIt, int ex_idx)
 		if(printIt)
 			cout << "ZERO DIVISOR detected\n";
 		ROU_Special_Case(1,printIt);
-		num_perms++;
+		rou_outputs[2]++;
 	}
 	// Perform first iteration of REF forward sub
 	y_k = FSub_Step_slim(y_k_old, 0, false);
@@ -1316,7 +1410,7 @@ int IPGE::Rank_One_Update_CR(bool printIt, int ex_idx)
 			if(printIt)
 				cout << "ZERO DIVISOR detected\n";
 			ROU_Special_Case(k+1,printIt);
-			num_perms++;
+			rou_outputs[2]++;
 		}
 
 		if(printIt)
@@ -1374,5 +1468,6 @@ int IPGE::Rank_One_Update_CR(bool printIt, int ex_idx)
 		cout << "Final factorization:\n";	
 		GFz_idx_formPrint(Ah, row_idx, col_idx, pSpace, 0);
 	}
-	return num_perms;
+	
+	return rou_outputs;
 }

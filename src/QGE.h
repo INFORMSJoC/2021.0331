@@ -2,13 +2,13 @@ class QGE : public Exact_LU_Alg
 {
 	public:
 		
-		//Iterative L and U matrices for ERA updates
+		// Iterative L and U matrices for ERA updates
 		mpq_t **Lq, **Uq;
 		
-		//Default Constructor
+		// Default Constructor
 		QGE ();
 
-		//User-specified constructor
+		// User-specified constructor
 		QGE (cmdOpt &);
 
 		//Matrix file constructor
@@ -18,42 +18,47 @@ class QGE : public Exact_LU_Alg
 		                        FUNCTIONS
 		-----------------------------------------------------------------------------------------*/
 
+		// This function sets a set of righthand side vectors using random values, according to the specified density of non-zeros
 		void set_RHS(double density_);
-
 		
-		//Doolittle Q_LU algorithm with no permutations (i.e., does not account for possibility of ZERO-valued pivots)
+		// Doolittle Q_LU algorithm with no permutations (i.e., does not account for possibility of ZERO-valued pivots)
 		void QD_LU_noPivoting(bool printIt);
 
-		//Crout's Q_LU algorithm with no permutations (i.e., does not account for possibility of ZERO-valued pivots)
+		// Crout's Q_LU algorithm with no permutations (i.e., does not account for possibility of ZERO-valued pivots)
 		void QC_LU_noPivoting(bool printIt);
 
-		//Reduced matrix QGE Doolittle pivot (i.e., does not affect previous pivot rows/cols)
+		// Reduced matrix QGE Doolittle pivot (i.e., does not affect previous pivot rows/cols); pivot is performed onto the existing Aq matrix.
 		void piv_red();
 
-		//Reduced matrix QGE Crout pivot (i.e., does not affect previous pivot rows/cols)
+		// Reduced matrix QGE Crout pivot (i.e., does not affect previous pivot rows/cols)
 		void piv_Crout_red();
 
-		//Reduced matrix QGE pivot for LU updating; receives current L-matrix and U-tilde matrix
+		//Reduced matrix QGE Doolittle pivot (i.e., does not affect previous pivot rows/cols); receives current L-matrix and U-tilde matrix, for use with BG_Update function
 		void piv_red(mpq_t **L_mat, mpq_t **Ut_mat);
 
-		//This algorithm can be used with the Doolittle and Crout ERA LU factorizations. 
-		//All that is needed is to identify if the working L matrix is unit triangular. 
-		//For Doolittle, the L matrix is unit triangular
+		/* 	
+		This function solves the triangular system (L^{-1})y=b in exact rational arithmetic onto the existing right-hand side columns
+		The algorithm can be used with the Doolittle and Crout ERA LU factorizations. 
+		All that is needed is to identify if the working L matrix is unit triangular. 
+		For Doolittle, the L matrix is unit triangular
+		*/
 		void FSub(bool unitTriang);
 
-		//Same as above but the matrix to be forwarded is provided as an argument
+		// Same as above function but the matrix to be forwarded is provided as an argument
 		void FSub(mpq_t **mpq_mat, int mat_cols, bool unitTriang);
 		
-		//This algorithm can be used with the Doolittle and Crout ERA LU factorizations. 
-		//All that is needed is to identify if the working U matrix is unit triangular. 
-		//For Crouts, the U matrix is unit triangular
+		/* 
+		This function solves the triangular system Ux=y in exact rational arithmetic 
+		This algorithm can be used with the Doolittle and Crout ERA LU factorizations. 
+		All that is needed is to identify if the working U matrix is unit triangular. 
+		For Crouts, the U matrix is unit triangular
+		*/
 		void BSub(bool unitTriang);
 
-		//Bartels-Golub LU update -- execute after an initial factorization has been calculated
-		//Split QGE into separate L and U matrices -- execute after an initial factorization has been calculated
+		// Split QGE into separate L and U matrices -- execute after an initial factorization has been calculated; for use with BG_Update
 		void LU_Split();
 
-		//Bartels Golub update
+		// This function performs the Bartels Golub column replacement update in exact rational arithmetic
 		void BG_Update();
 
 };
@@ -62,13 +67,14 @@ QGE::QGE () {
 	Exact_LU_Alg();
 }
 
+// This function initializes an mpq matrix according to the provided arguments
 QGE::QGE (cmdOpt &run) {
 	load_from_cmdOpt(run);
 	
 	Aq =  GFq_mat_init_density(rows, cols, get_lb(), get_ub(), get_seed1(), get_seed2(), get_density(), true);
 }
 
-
+//Doolittle Q_LU algorithm with no permutations (i.e., does not account for possibility of ZERO-valued pivots)
 void QGE::QD_LU_noPivoting(bool printIt)
 {
 	if(printIt)
@@ -82,6 +88,7 @@ void QGE::QD_LU_noPivoting(bool printIt)
 	}
 }
 
+//Crout Q_LU algorithm with no permutations (i.e., does not account for possibility of ZERO-valued pivots)
 void QGE::QC_LU_noPivoting(bool printIt)
 {
 	if(printIt)
@@ -95,6 +102,7 @@ void QGE::QC_LU_noPivoting(bool printIt)
 	}
 }
 
+//Reduced matrix QGE Doolittle pivot (i.e., does not affect previous pivot rows/cols); pivot is performed onto the existing Aq matrix.
 void QGE::piv_red()
 {
 	mpq_t l_i, prod;
@@ -115,6 +123,7 @@ void QGE::piv_red()
 	stepNum++;
 }
 
+//Reduced matrix QGE Doolittle pivot (i.e., does not affect previous pivot rows/cols); receives current L-matrix and U-tilde matrix, for use with BG_Update function
 void QGE::piv_red(mpq_t **L_mat, mpq_t **Ut_mat)
 {
 	int i_stop;
@@ -162,6 +171,7 @@ void QGE::piv_red(mpq_t **L_mat, mpq_t **Ut_mat)
 	stepNum++;
 }
 
+//Reduced matrix QGE Crout pivot (i.e., does not affect previous pivot rows/cols)
 void QGE::piv_Crout_red()
 {
 	mpq_t sum, prod, diff;
@@ -198,6 +208,12 @@ void QGE::piv_Crout_red()
 	stepNum++;
 }
 
+/* 	
+	This function solves the triangular system (L^{-1})y=b in exact rational arithmetic onto the existing right-hand side columns
+	The algorithm can be used with the Doolittle and Crout ERA LU factorizations. 
+	All that is needed is to identify if the working L matrix is unit triangular. 
+	For Doolittle, the L matrix is unit triangular
+*/
 void QGE::FSub(bool unitTriang)
 {
 	mpq_t prod;
@@ -223,6 +239,7 @@ void QGE::FSub(bool unitTriang)
 	}
 }
 
+//Same as previous function, but the matrix to be forwarded is provided as an argument
 void QGE::FSub(mpq_t **mpq_mat,int mat_cols, bool unitTriang)
 {
 	mpq_t prod;
@@ -243,7 +260,12 @@ void QGE::FSub(mpq_t **mpq_mat,int mat_cols, bool unitTriang)
 	}
 }
 
-
+/* 		
+	This function solves the triangular system Ux=y in exact rational arithmetic 
+	This algorithm can be used with the Doolittle and Crout ERA LU factorizations. 
+	All that is needed is to identify if the working U matrix is unit triangular. 
+	For Crouts, the U matrix is unit triangular
+*/
 void QGE::BSub(bool unitTriang)
 {
 	mpq_t prod;
@@ -269,12 +291,14 @@ void QGE::BSub(bool unitTriang)
 	}
 }
 
+// This function sets a set of righthand side vectors using random values, according to the specified density of non-zeros
 void QGE::set_RHS(double density_)
 {
 	//Initialize elements in B to 0
 	Bq = GFq_mat_init_density(rows, cols_B, get_lb(), get_ub(), get_seed1()*3, get_seed2()*2, density_, false);	
 }
 
+// Split QGE into separate L and U matrices -- execute after an initial factorization has been calculated; for use with BG_Update
 void QGE::LU_Split()
 {
 	Lq = GFq_mat_init_zeros(rows, cols);
@@ -291,6 +315,7 @@ void QGE::LU_Split()
 	}
 }
 
+// This function performs the Bartels Golub column replacement update in exact rational arithmetic
 void QGE::BG_Update()
 {
 	//Perform Bartels Golub permutation to prepare matrix for updating
@@ -314,4 +339,3 @@ void QGE::BG_Update()
 			mpq_set(Uq[up_row_idx[i]][up_col_idx[j]], Lq[row_idx[i]][col_idx[j]]);
 	}
 }
-

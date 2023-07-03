@@ -10,27 +10,15 @@ CCCFLAGS = -std=c++11
 #--------------------------------------------------------------------
 CCLNFLAGS = -lgmp
 CCCLNFLAGS = -lgmpxx
-#
-#
-
-
-#-------------------------------------------------------------------
-# Compiler options  -DNDEBUG <-- Cplex turns off asserts
-#--------------------------------------------------------------------
-
-
 
 #--------------------------------------------------------------------
 # Applications
 #---------------------------------------------------------------------
-APPS = ROU CR_ROU
+APPS = ROU
 all: $(APPS)
 
-ROU: ROU.cpp 
-	$(CCC) -o ROU ROU.cpp $(CCLNFLAGS) $(CCCLNFLAGS) $(CCCFLAGS) 
-
-CR_ROU: CR_ROU.cpp 
-	$(CCC) -o CR_ROU CR_ROU.cpp $(CCLNFLAGS) $(CCCLNFLAGS) $(CCCFLAGS) 
+ROU: src/ROU.cpp 
+	$(CCC) -o ./src/ROU src/ROU.cpp $(CCLNFLAGS) $(CCCLNFLAGS) $(CCCFLAGS) 
 
 #--------------------------------------------------------------------
 # Additional commands

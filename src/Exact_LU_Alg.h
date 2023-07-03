@@ -19,62 +19,62 @@ class Exact_LU_Alg
 		int stepNum;
 		int pSpace; //for printing matrices in a visually appealing format
 
-		//For mpz comparisons
+		// For mpz comparisons
 		mpz_t mpz_ZERO;
 		mpq_t mpq_ZERO;
 
-		//Iterative input matrix and fixed input matrix
+		// Iterative input matrix and fixed input matrix
 		mpz_t **A, **A0;
 		mpq_t **Aq, **Aq0; //Rational version 
 
-		//Matrix that will hold the rank-one updated factorization
+		// Matrix that will hold the rank-one updated factorization
 		mpz_t **Ah;
 
-		//Input right-hand vector(s) 
+		// Input right-hand vector(s) 
 		mpz_t **B;
 		mpq_t **Bq; //Rational version
 
-		//Entering column(s)
+		// Entering column(s)
 		mpz_t **A_plus, **A_plus0;
 		mpq_t **Aq_plus; //Rational version
 
-		//Forward Substitution vector(s) 
+		// Forward Substitution vector(s) 
 		mpz_t **Y;
 		mpq_t **Yq; //Rational version
 
-		//Forward substitution iterative vector used in rank-one update
+		// Forward substitution iterative vector used in rank-one update
 		mpz_t *y_k_old, *y_k, *z_k_old, *z_k;
 		
-		//Update vectors used in rank-one update
+		// Update vectors used in rank-one update
 		mpz_t *v, *w;
 
-		//Backward Substitution vector(s) 
+		// Backward Substitution vector(s) 
 		mpz_t **X_p;//This is the x'-vector (i.e., x'=det(A)x)
 		mpq_t **Xq; //Rational version
 
-		//Holds Exact solutions up to double precision
+		// Holds Exact solutions up to double precision
 		double **Xd;
 
-		//Standard Row and Column Index Order
+		// Standard Row and Column Index Order
 		vector<int> row_idx_std;
 		vector<int> col_idx_std;
 
-		//Current Row and Column index Order
+		// Current Row and Column index Order
 		vector<int> row_idx;
 		vector<int> col_idx;
 
 
-		//Current Row and Column index Order for update algorithms
+		// Current Row and Column index Order for update algorithms
 		vector<int> up_row_idx;
 		vector<int> up_col_idx;
 
-		//Same but for RHS columns
+		// Same but for RHS columns
 		vector<int> col_idx_B;
 
 	/*-----------------------------------------------------------------------------------------
 		                        FUNCTIONS
 	-----------------------------------------------------------------------------------------*/
-		//Getter functions
+		// Getter functions
 		int get_ex_idx(void) { return ex_idx;}
 		int get_num_ent(void) { return num_ent;}
 		int get_lb (void){return lb;}
@@ -83,7 +83,7 @@ class Exact_LU_Alg
 		int get_seed2 (void){return seed2;}
 		double get_density (void){return density;}
 
-		//Setter functions
+		// Setter functions
 		void set_ex_idx(int ex_idx_) {ex_idx=ex_idx_;}
 		void set_num_ent(int num_ent_) { num_ent = num_ent_;}
 		void set_lb (int lb_){lb=lb_;}
@@ -92,15 +92,16 @@ class Exact_LU_Alg
 		void set_seed2 (int seed2_){seed2=seed2_;}
 		void set_density (double density_){density=density_;}
 		
-		//Initializes members from cmdOpt object
+		// Initializes members from cmdOpt object
 		void load_from_cmdOpt(cmdOpt &run);
 
-		//Verifies solution is correct by multiplying A0 times Xq and comparing produce with Bq 
+		// Verifies solution is correct by multiplying A0 times Xq and comparing produce with Bq 
 		bool verify_sol(string);
-		//Verifies solution is correct by comparing Bq with an alternative Bq matrix known to be exact
+		
+		// Verifies solution is correct by comparing Bq with an alternative Bq matrix known to be exact
 		bool verify_sol(string, mpq_t **);
 
-		//Bartels Golub permutation (Modifies row and column index arrays)
+		// Bartels Golub permutation (Modifies row and column index arrays)
 		void BG_Perm();
 };
 
@@ -179,6 +180,7 @@ bool Exact_LU_Alg::verify_sol(string alg_name, mpq_t **exact_Xq)
 	return GFq_matComp(Xq, exact_Xq, rows, cols_B);
 }
 
+// Bartels Golub permutation (Modifies row and column index arrays)
 void Exact_LU_Alg::BG_Perm()
 {
 	up_row_idx.clear();
