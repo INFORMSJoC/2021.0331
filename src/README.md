@@ -2,7 +2,7 @@
 
 # Exact Matrix Factorization Updates for Nonlinear Programming
 
-The folder contains the source co\de for the ROU executable; its functionality and usage are defined in the README.md file within the main directory. The folder also contains the header files that define the algorithms associated with the ROU executable. There are a total of 5 header files; their brief descriptions are below:
+The folder contains the source code for the ROU executable; its functionality and usage are defined in the README.md file within the main directory. The folder also contains the header files that define the algorithms associated with the ROU executable. There are a total of 5 header files; their brief descriptions are below:
 
 1. GF.h: Defines various basic functions (copy, multiply, print) specific to mpz and mpq vector and matrix data structures.
 
