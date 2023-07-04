@@ -9,7 +9,7 @@ The software and data in this repository are a snapshot of the software and data
 The snapshot is based on 
 [this SHA](https://github.com/adolfoescobedo/2021.0331) in the development repository.  
 
-**Important: This code is being periodically updated to add more features at https://github.com/adolfoescobedo/REF-ROU. Please go there if you would like to get a more recent version or would like support**
+**Important: This code is being periodically updated to add more features at https://github.com/adolfoescobedo/REF-ROU. Please go there if you would like to get a more recent version**
 
 ## Cite
 
@@ -34,7 +34,7 @@ Below is the BibTex for citing this snapshot of the repository.
 
 # REF-ROU
 
-The REF-ROU repository consists of integer-preserving algorithms for efficiently updating a roundoff-error-free LU or Cholesky factorization. The main executable (ROU.exe) can be used to replicate the three experiments in the paper and for additional computational testing.
+The REF-ROU repository consists of integer-preserving algorithms for efficiently updating a roundoff-error-free LU or Cholesky factorization. The main executable (ROU) can be used to replicate the three experiments in the paper and to perform additional computational tests.
 
 ## Dependencies
 
@@ -80,7 +80,7 @@ make
 
 ## Usage
 
-The main executable associated with the installation of REF-ROU is ROU.exe. There are two possible usages of the ROU update algorithms, described as follows. 
+The main executable associated with the installation of REF-ROU is ROU. There are two possible usages of the ROU update algorithms, described as follows. 
 
 ### General ROU update. 
 
