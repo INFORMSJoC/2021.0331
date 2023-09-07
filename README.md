@@ -1,10 +1,10 @@
 [![INFORMS Journal on Computing Logo](https://INFORMSJoC.github.io/logos/INFORMS_Journal_on_Computing_Header.jpg)](https://pubsonline.informs.org/journal/ijoc)
 
-# Exact Matrix Factorization Updates for Nonlinear Programming
+# [Exact Matrix Factorization Updates for Nonlinear Programming](https://doi.org/10.1287/ijoc.2021.0331)
 
 This archive is distributed in association with the [INFORMS Journal on Computing](https://pubsonline.informs.org/journal/ijoc) under the [MIT License](LICENSE).
 
-The software and data in this repository are a snapshot of the software and data associated with the paper "Exact Matrix Factorization Updates for Nonlinear Programming" by Adolfo R. Escobedo.
+The software and data in this repository are a snapshot of the software and data associated with the paper ["Exact Matrix Factorization Updates for Nonlinear Programming"](https://doi.org/10.1287/ijoc.2021.0331) by Adolfo R. Escobedo.
 
 The snapshot is based on 
 [this SHA](https://github.com/adolfoescobedo/2021.0331) in the development repository.  
